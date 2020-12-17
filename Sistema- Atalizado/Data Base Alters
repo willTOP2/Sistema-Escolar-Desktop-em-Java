@@ -1,0 +1,32 @@
+ALTER TABLE PER_ALUNO_DISC ADD foreign key (cod_aluno) references
+			 ALUNO (cod_aluno); 
+			 
+			 ALTER TABLE PER_ALUNO_DISC ADD foreign key (cod_per) references
+			 PERIODO (cod_per);
+			  
+			  ALTER TABLE PER_ALUNO_DISC ADD foreign key (cod_disc) references
+			 DISCIPLINA (cod_disc);
+			 
+			 ALTER TABLE PROF_DISC ADD foreign key (cod_prof) references
+			 PROFISSIONAL (cod_prof); 
+			 
+			 ALTER TABLE PROF_DISC ADD foreign key (cod_disc) references
+			 DISCIPLINA (cod_disc); 
+			 
+			 ALTER TABLE TUR_DISC ADD foreign key(cod_disc) references
+			 DISCIPLINA (cod_disc); 
+			 
+			 ALTER TABLE TUR_DISC ADD foreign key (cod_tur) references
+			 TURNO (cod_turno);
+			 
+			 ALTER TABLE SALA_DISC ADD foreign key (cod_sala) references
+			 SALA (cod_sala); 
+			 
+			 ALTER TABLE SALA_DISC ADD foreign key (cod_disc) references
+			 DISCIPLINA (cod_disc); 
+                    
+                 ALTER TABLE TURMA_DISC ADD foreign key (cod_turma) references
+                 TURMA (cod_turma);
+                    
+                        ALTER TABLE TURMA_DISC ADD foreign key  (cod_disc)references
+                         DISCIPLINA (cod_disc); 

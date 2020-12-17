@@ -1,0 +1,219 @@
+package Model;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
+
+
+
+
+public class Conexao_bd {
+    public  String url = "jdbc:postgresql://localhost:5432/Escola";
+    public String usuario = "postgres";
+    public  String senha = "root";
+    
+    
+    
+    
+    private  Connection conexao = null;
+    private  Statement stmt = null;
+    
+    public  boolean conecta (){
+        try {
+            conexao = DriverManager.getConnection(url, usuario, senha);
+             JOptionPane.showMessageDialog(null, "conexao com sucesso");
+            return true;
+        }
+            catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "nao deu certo a conexao");
+                return false;
+            }
+    }
+   
+    public  boolean tabela_creates(){
+        try {
+            conexao = DriverManager.getConnection(url, usuario, senha);
+            stmt = conexao.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS ALUNO ("+ 
+                    "cod_aluno serial,  "+
+                    "nome_aluno varchar NOT NULL, "+
+                    "sobrenome varchar NOT NULL, "+
+                    "rg_aluno varchar NOT NULL, "+
+                    "data_nasc DATE, "+
+                    "resultado varchar, "+  
+                    "falta_aluno integer NOT NULL, "+
+                    "CONSTRAINT COD_ALUNO PRIMARY KEY (cod_aluno) "+
+                    ");"+
+
+                    "CREATE TABLE IF NOT EXISTS PER_ALUNO("+
+                    "cod_per serial,"+
+                    "cod_aluno serial,"+
+                    ");"+
+
+
+                    " create type tipo_periodo as ENUM ('B','T','S');"+ 
+                    "CREATE TABLE IF NOT EXISTS PERIODO("+
+                    "cod_per serial primary key,"+
+                    "nota_aluno decimal(2,1) NOT NULL,"+
+                    "tipo_per tipo_periodo NOT NULL,"+
+                    "ordinal_per int(1) NOT NULL"+
+                    ");"+
+
+
+                    "CREATE TABLE IF NOT EXISTS PER_DISC("+
+                    "cod_per serial NOT NULL,"+
+                    "cod_disc  serial NOT NULL);"+
+
+
+                    "create type tipo_usuario as ENUM ('P','D','S');"+   
+                    "CREATE TABLE IF NOT EXISTS PROFISSIONAL ("+
+                    " cod_prof SERIAL, "+
+                    " nome_prof varchar NOT NULL, "+
+                    " email_prof varchar NOT NULL, "+
+                    " senha varchar NOT NULL, "+
+                    " tipo_usu tipo_usuario NOT NULL, "+
+                    " cpf varchar(11) NOT NULL, "+       
+                    " CONSTRAINT cod_prof PRIMARY KEY (cod_prof) "+
+                    ");"+ 
+
+                    "CREATE TABLE IF NOT EXISTS PROF_DISC("+
+                    "cod_prof serial NOT NULL,"+
+                    "cod_disc serial NOT NULL"+
+                    ");"+
+
+
+                    "CREATE TYPE turn AS ENUM ('M','V','N');"+
+                    " CREATE TABLE IF NOT EXISTS TURNO ("+
+                    " cod_turno SERIAL PRIMARY KEY, "+
+                    " descricao_turno turno NOT NULL "+
+                    ");"+
+
+
+                    "CREATE TABLE IF NOT EXISTS TUR_DISC("+
+                    "cod_disc serial NOT NULL"+
+                    "cod_tur serial NOT NULL"+
+                    ");"+
+
+
+                    " CREATE TABLE IF NOT EXISTS BLOCO ("+
+                    " cod_blo SERIAL, "+
+                    "descricao_blo varchar NOT NULL, "+
+                    " CONSTRAINT COD_BLO PRIMARY KEY(cod_blo) "+
+                    ");"+
+
+
+
+                    " CREATE TABLE IF NOT EXISTS SALA ("+
+                    " cod_sala SERIAL, "+
+                    " cod_bloc serial NOT NULL, "+         
+                    " descricao_sala varchar NOT NULL, "+
+                    " CONSTRAINT cod_sala PRIMARY KEY(cod_sala) "+
+                    ");"+	
+
+                    "CREATE TABLE IF NOT EXISTS SALA_DISC("+
+                    "cod_sala serial NOT NULL,"+
+                    "cod_disc serial NOT NULL"+
+                    ");"+
+                    
+                    
+                    "CREATE TABLE IF NOT EXISTS TURMA("+
+                    "cod_turma serial primary key,"+
+                    "turma_descricao varchar"+
+                    ");"+
+                    
+                    
+                    "CREATE TABLE IF NOT EXISTS TURMA_DISC"+
+                    "cod_turma serial NOT NULL,"+
+                    "cod_disc serial NOT NULL"+
+                    ");"+
+
+
+                    " CREATE TABLE IF NOT EXISTS DISCIPLINA ("+
+                    " cod_disc SERIAL, "+
+                    " nome_disc varchar, "+
+                    " CONSTRAINT cod_disc PRIMARY KEY (cod_disc) "+
+                    ");";
+
+            stmt.executeUpdate(sql);
+             JOptionPane.showMessageDialog(null, "deu certo ao criar tabela");
+            stmt.close();
+            conexao.close();
+            return true;
+        } catch (SQLException e) {
+             JOptionPane.showMessageDialog(null, "nao deu certo ao criar tabela");
+            return false;
+        }
+        
+    }
+    
+    
+    
+    public  boolean modify(){
+          try {
+            conexao = DriverManager.getConnection(url, usuario, senha);
+            stmt = conexao.createStatement();
+            
+            String sql = 
+                           
+               "ALTER TABLE SALA ADD CONSTRAINT cod_bloco_fk\n" +
+            "FOREIGN KEY (cod_bloc)\n" +
+             "REFERENCES bloco (COD_BLO);\n" +
+			 
+			 "ALTER TABLE PER_ALUNO ADD foreign key (cod_aluno)references"+
+			 "ALUNO(cod_aluno); "+
+			 
+			 "ALTER TABLE PER_ALUNO ADD foreign key (cod_per) references"+
+			 "PERIODO(cod_per); "+
+			 
+			 "ALTER TABLE PROF_DISC ADD foreign key (cod_prof) references"+
+			 "PROFISSIONAL(cod_prof);"+
+			 
+			 "ALTER TABLE PROF_DISC ADD foreign key (cod_disc) references"+
+			 "DISCIPLINA(cod_disc);"+
+			 
+			 "ALTER TABLE TUR_DISC ADD foreign key (cod_disc) references"+
+			 "DISCIPLINA(cod_disc);"+
+			 
+			 "ALTER TABLE TUR_DISC ADD foreign key (cod_tur) references"+
+			 "TURNO(cod_tur);"+
+			 
+			 "ALTER TABLE SALA_DISC ADD foreign key (cod_sala) references"+
+			 "SALA(cod_sala);"+
+			 
+			 "ALTER TABLE SALA_DISC ADD foreign key (cod_disc) references"+
+			 "DISCIPLINA(cod_disc);"+
+                    
+                         "ALTER TABLE TURMA_DISC ADD foreign key (cod_turma) references"+
+                         "TURMA(cod_turma)"+
+                    
+                        "ALTER TABLE TURMA_DISC ADD foreign key (cod_disc) references"+
+                         "DISCIPLINA(cod_disc)"
+                    
+            +"insert into profissional (cod_prof, nome_prof,email_prof, senha,tipo_usu,cpf) VALUES(1,'diretor','admin@gmail.com','admin','D','');";
+        
+        stmt.executeUpdate(sql);
+            stmt.close();
+            conexao.close();
+            return true;
+        } catch (SQLException e) {
+              JOptionPane.showMessageDialog(null, "nao deu certo no modify");
+            return false;
+        }
+
+
+    
+    }
+    
+    
+    
+    
+}
+
+
+
+
+

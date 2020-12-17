@@ -1,0 +1,97 @@
+CREATE TABLE if not exists ALUNO (
+                    cod_aluno serial,
+                    nome_aluno varchar not NULL,
+                    sobrenome varchar Not NULL,
+                    rg_aluno varchar Not NULL,
+                    data_nasc DATE,
+                    resultado varchar,  
+                    falta_aluno int NOT NULL,
+                    CONSTRAINT COD_ALUNO PRIMARY KEY (cod_aluno)
+                    );
+
+                    Create table if not exists PER_ALUNO_DISC (
+                    cod_per serial ,
+                    cod_aluno serial,
+		    cod_disc serial,
+                    );
+
+
+                  
+                
+		    CReate table if not exists PERIODO (
+                    cod_per serial primary key,
+                    nota_aluno decimal (2,1) Not NULL,
+                    ordinal_per int  Not NULL
+                    );
+
+
+
+
+                    
+                    create table if not exists PROFISSIONAL (
+                    cod_prof SERIAL,
+                    nome_prof varchar not NULL,
+                    cpf varchar (11) Not NULl,
+		    login character varying (20),
+		    senha character varying (20),
+		    perfil character varying (15),
+                    CONSTRAINT cod_prof PRIMARY KEY (cod_prof)
+                    );
+
+                    create table if not exists PROF_DISC (
+                    cod_prof serial ,
+                    cod_disc serial 
+                    );
+
+
+                    create table if not exists TURNO (
+                    cod_turno SERIAL primary key,
+		    descricao_turno character varying 
+                    );
+                    
+
+
+                    create table if not exists TUR_DISC (
+                    cod_disc serial ,
+                    cod_tur serial 
+                    );
+
+
+                    create table if not exists BLOCO (
+                    cod_blo SERIAL,
+                    descricao_blo varchar Not NULL,
+                    CONSTRAINT COD_BLO primary key (cod_blo)
+                    );
+
+
+
+                    create table if not exists SALA (
+                    cod_sala SERIAL,
+                    cod_bloc serial NOT NULL,         
+                    descricao_sala varchar Not NULL,
+                    CONSTRAINT cod_sala  Primary key (cod_sala)
+                    );
+
+                    create table if not exists SALA_DISC (
+                    cod_sala serial ,
+                    cod_disc serial 
+                    );
+                    
+                    
+                    create table if not exists TURMA (
+                     cod_turma serial primary key,
+                    turma_descricao varchar
+                    );
+                    
+                    
+                    create table if not exists TURMA_DISC(
+                    cod_turma serial ,
+                    cod_disc serial
+                    );
+
+
+                    create table if not exists DISCIPLINA (
+                    cod_disc SERIAL,
+                    nome_disc varchar,
+                    CONSTRAINT cod_disc PRIMARY KEY (cod_disc)
+                    );
